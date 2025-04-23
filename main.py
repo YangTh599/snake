@@ -5,6 +5,7 @@ import os
 from os.path import join
 from random import randint as rnd
 from pygame.time import delay as slp
+from pygame.math import Vector2
 
 from colors import *
 from pygame_config import *
