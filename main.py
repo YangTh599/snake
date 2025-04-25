@@ -25,41 +25,35 @@ def init_game():
     return window
 
 # Draw Function to update graphics
-def draw(window):
+def draw(window, buttons, tb):
     """DRAW FUNCTION | allows screen graphics to be added"""
     #BACKGROUND
     window.fill(WHITE) # 15
     
 
     #FOREGROUND
-    
+    for t in tb:
+        t.draw_textbox()
+    for button in buttons:
+        button.draw_textbox()
 
     #UPDATE DISPLAY
     pygame.display.update()
 
-# def handle_events():
-#     """Handles any pygame event such as key input"""
-#     for event in pygame.event.get():
-#         if event.type == pygame.QUIT: # QUIT
-#             return False
-    
-#     keys = pygame.key.get_pressed()
-
-#     return True
-
-
 class Main():
     def __init__(self, window):
         self.window = window
+        self.run = False
         self.snake = sn.Snake(window)
         self.fruit = sn.Apple(window)
         self.score_text = boxes.Text_box(self.window, 10, 10, 10, 10,"Score: ",BLACK)
         self.score = 0
 
     def update(self):
-        self.snake.move_snake()
-        self.check_collision()
-        self.check_fail()
+        if self.run == True and self.snake.direction != Vector2(0,0):
+            self.snake.move_snake()
+            self.check_collision()
+            self.check_fail()
 
     def draw_elements(self):
         self.draw_grass()
@@ -71,6 +65,7 @@ class Main():
         if self.fruit.pos == self.snake.body[0]:
             self.fruit.randomize()
             self.snake.add_block()
+            self.snake.play_crunch_sound()
             self.score += 1
 
         for block in self.snake.body[1:]:
@@ -79,16 +74,20 @@ class Main():
 
     def check_fail(self):
         if not 0 <= self.snake.body[0].x < CELL_NUMS or not 0 <= self.snake.body[0].y < CELL_NUMS:
+            self.run = False
             self.game_over()
 
         for block in self.snake.body[1:]:
             if block == self.snake.body[0]:
+                self.run = False
                 self.game_over()
 
     def game_over(self):
         self.snake.reset()
         self.score_text.text = "Score: 0"
         self.score = 0
+        
+        
 
     def draw_grass(self):
         grass_color = (167, 209, 61)
@@ -122,39 +121,70 @@ def main(): # MAIN FUNCTION
     # ADD ALL OBJECTS/CLASSES BELOW HERE
 
     main_game = Main(window)
+    highest_score = main_game.score
     
+
+
+    hscoretext = boxes.Text_box(window, SCREEN_WIDTH//2 -100,370,200,25,"High Score: 0", BLACK)
+    start = boxes.Button(window, SCREEN_WIDTH//2 -50,400,100,25,"PLAY")
+    quit_button = boxes.Button(window, SCREEN_WIDTH//2 - 50,430,100,25,"QUIT")
+
+    background_music = pygame.mixer.Sound("music/mr_bightside.mp3")
+
+    try:
+        pygame.mixer.music.load("music/mr_bightside.mp3")
+        pygame.mixer_music.set_volume(0.4)
+        pygame.mixer.music.play(-1)
+    except pygame.error as e:
+        print(f"Error loading or playing music in Snake game: {e}")
+
+    buttons = [start, quit_button]
+    textes = [hscoretext]
     # ADD ALL OBJECTS/CLASSES ABOVE HERE
     run = True
     while run: # run set to true, program runs while run is true.
 
         clock.tick(FPS) # FPS Tick
+        if main_game.run == True: #RUNS WHEN PLAY BUTTON IS PRESSED
+            while main_game.run:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT: # QUIT
+                        run = False
+                    if event.type == SCREEN_UPDATE:
+                        main_game.update()
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_UP:
+                            if main_game.snake.direction.y != 1:
+                                main_game.snake.direction = Vector2(0,-1)
+                        if event.key == pygame.K_RIGHT:
+                            if main_game.snake.direction.x != -1:
+                                main_game.snake.direction = Vector2(1,0)
+                        if event.key == pygame.K_DOWN:
+                            if main_game.snake.direction.y != -1:
+                                main_game.snake.direction = Vector2(0,1)
+                        if event.key == pygame.K_LEFT:
+                            if main_game.snake.direction.x != 1:
+                                main_game.snake.direction = Vector2(-1,0)
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT: # QUIT
-                run = False
-            if event.type == SCREEN_UPDATE:
-                main_game.update()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    if main_game.snake.direction.y != 1:
-                        main_game.snake.direction = Vector2(0,-1)
-                if event.key == pygame.K_RIGHT:
-                    if main_game.snake.direction.x != -1:
-                        main_game.snake.direction = Vector2(1,0)
-                if event.key == pygame.K_DOWN:
-                    if main_game.snake.direction.y != -1:
-                        main_game.snake.direction = Vector2(0,1)
-                if event.key == pygame.K_LEFT:
-                    if main_game.snake.direction.x != 1:
-                        main_game.snake.direction = Vector2(-1,0)
-
+                if main_game.score > highest_score:
+                    highest_score = main_game.score
+                    hscoretext.text = "High Score: " + str(highest_score)
                 
-        window.fill((175,215,70))
-        main_game.draw_elements()
-        pygame.display.update()
+                window.fill((175,215,70))
+                main_game.draw_elements()
+                pygame.display.update()
+        else:
 
-        
-        # draw(window) # UPDATES SCREEN
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if start.check_clicked():
+                        main_game.run = True
+                    if quit_button.check_clicked():
+                        run = False
+            
+            draw(window, buttons,textes)
 
     pygame.quit()
     sys.exit()

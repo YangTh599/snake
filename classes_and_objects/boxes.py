@@ -125,7 +125,7 @@ class Image_box():
 class Button(Text_box):
 
     def __init__(self, window, x, y, width, height, text, text_color = WHITE,rect_color = THAYER_GREEN, hover_color = LIME,font="Comic Sans MS",text_size = 24, draw_rect = True, centered = True, rotation = 0):
-        super.__init__(window, x, y, width, height, text, text_color,rect_color,font,text_size, draw_rect, centered, rotation)
+        super().__init__(window, x, y, width, height, text, text_color,rect_color,font,text_size, draw_rect, centered, rotation)
 
         self.hover_color = hover_color
         self.not_hover_color = rect_color

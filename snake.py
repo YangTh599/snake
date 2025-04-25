@@ -13,6 +13,8 @@ class Snake:
         self.direction = Vector2(0,0)
         self.new_block = False
 
+        self.crunch = pygame.mixer.Sound("snake_assets/crunch/crunch1.mp3")
+
     def draw_snake(self):
 
 
@@ -38,7 +40,7 @@ class Snake:
         self.new_block = True
 
     def play_crunch_sound(self):
-        pass
+        self.crunch.play()
 
     def reset(self):
         self.body = [Vector2(5,10), Vector2(4,10), Vector2(3,10)]
