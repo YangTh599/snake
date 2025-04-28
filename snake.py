@@ -16,10 +16,20 @@ class Snake:
         self.head_up = pygame.image.load("snake_assets/snake_img/head_up.png").convert_alpha()
         self.head_up = pygame.transform.scale(self.head_up, (cfig.CELL_SIZE, cfig.CELL_SIZE))
 
+        self.tail_up = pygame.image.load("snake_assets/snake_img/tail_up.png").convert_alpha()
+        self.tail_up = pygame.transform.scale(self.tail_up, (cfig.CELL_SIZE, cfig.CELL_SIZE))
+
+        self.body_img = pygame.image.load("snake_assets/snake_img/body.png").convert_alpha()
+        self.body_down = pygame.transform.scale(self.body_img, (cfig.CELL_SIZE, cfig.CELL_SIZE))
+        self.body_right = pygame.transform.rotate(self.body_down, 90)
+        self.body_up = pygame.transform.rotate(self.body_down, 180)
+        self.body_left = pygame.transform.rotate(self.body_down, 270)
+
         self.crunch = pygame.mixer.Sound("snake_assets/crunch/crunch1.mp3")
 
     def draw_snake(self):
         self.update_head_graphics()
+        self.update_tail_graphics()
 
         for index, block, in enumerate(self.body):
             x_pos = int(block.x * cfig.CELL_SIZE)
@@ -28,8 +38,24 @@ class Snake:
 
             if index == 0:
                 self.window.blit(self.head,block_rect)
+            elif index == len(self.body) - 1:
+                self.window.blit(self.tail,block_rect)
             else:
-                pygame.draw.rect(self.window, THAYER_GREEN, block_rect)
+                previous_block = self.body[index + 1] - block
+                next_block = self.body[index - 1] - block
+                if previous_block.x == next_block.x:
+                    if previous_block.y > next_block.y:
+                        self.window.blit(self.body_down,block_rect)
+                    else:
+                        self.window.blit(self.body_up,block_rect)
+                elif previous_block.y == next_block.y:
+                    if previous_block.x > next_block.x:
+                        self.window.blit(self.body_right,block_rect)
+                    else:
+                        self.window.blit(self.body_left,block_rect)
+
+
+                # pygame.draw.rect(self.window, THAYER_GREEN, block_rect)
 
     def move_snake(self):
         if self.new_block == True:
@@ -58,6 +84,13 @@ class Snake:
             elif head_relation == Vector2(-1,0): self.head = pygame.transform.rotate(self.head_up,270)
             elif head_relation == Vector2(0,1): self.head = self.head_up
             elif head_relation == Vector2(0,-1): self.head = pygame.transform.rotate(self.head_up,180)
+
+    def update_tail_graphics(self):
+            tail_relation = self.body[-2] - self.body[-1]
+            if tail_relation == Vector2(1,0): self.tail = pygame.transform.rotate(self.tail_up,270)
+            elif tail_relation == Vector2(-1,0): self.tail = pygame.transform.rotate(self.tail_up,90)
+            elif tail_relation == Vector2(0,1): self.tail = pygame.transform.rotate(self.tail_up,180)
+            elif tail_relation == Vector2(0,-1): self.tail = self.tail_up
 
 
 class Apple:
