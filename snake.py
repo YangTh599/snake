@@ -28,8 +28,8 @@ class Snake:
 
             if index == 0:
                 self.window.blit(self.head,block_rect)
-
-            pygame.draw.rect(self.window, THAYER_GREEN, block_rect)
+            else:
+                pygame.draw.rect(self.window, THAYER_GREEN, block_rect)
 
     def move_snake(self):
         if self.new_block == True:
@@ -54,10 +54,10 @@ class Snake:
 
     def update_head_graphics(self):
             head_relation = self.body[1] - self.body[0]
-            if head_relation == Vector2(1,0): self.head = self.head_up
-            elif head_relation == Vector2(-1,0): self.head = self.head_up
+            if head_relation == Vector2(1,0): self.head = pygame.transform.rotate(self.head_up,90)
+            elif head_relation == Vector2(-1,0): self.head = pygame.transform.rotate(self.head_up,270)
             elif head_relation == Vector2(0,1): self.head = self.head_up
-            elif head_relation == Vector2(0,-1): self.head = self.head_up
+            elif head_relation == Vector2(0,-1): self.head = pygame.transform.rotate(self.head_up,180)
 
 
 class Apple:
