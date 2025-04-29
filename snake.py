@@ -25,6 +25,12 @@ class Snake:
         self.body_up = pygame.transform.rotate(self.body_down, 180)
         self.body_left = pygame.transform.rotate(self.body_down, 270)
 
+        self.turn_left = pygame.image.load("snake_assets/snake_img/turnleft.png").convert_alpha()
+        self.turn_right = pygame.image.load("snake_assets/snake_img/turnright.png").convert_alpha()
+        self.turn_left = pygame.transform.scale(self.turn_left, (cfig.CELL_SIZE, cfig.CELL_SIZE))
+        self.turn_right = pygame.transform.scale(self.turn_right, (cfig.CELL_SIZE, cfig.CELL_SIZE))
+        
+
         self.crunch = pygame.mixer.Sound("snake_assets/crunch/crunch1.mp3")
 
     def draw_snake(self):
@@ -43,6 +49,7 @@ class Snake:
             else:
                 previous_block = self.body[index + 1] - block
                 next_block = self.body[index - 1] - block
+                
                 if previous_block.x == next_block.x:
                     if previous_block.y > next_block.y:
                         self.window.blit(self.body_down,block_rect)
@@ -53,6 +60,19 @@ class Snake:
                         self.window.blit(self.body_right,block_rect)
                     else:
                         self.window.blit(self.body_left,block_rect)
+                else:
+                    if previous_block.x == -1 and next_block.y == -1:
+                            self.window.blit(pygame.transform.rotate(self.turn_left, 270),block_rect)
+                    elif previous_block.y == -1 and next_block.x == -1:
+                        self.window.blit(pygame.transform.rotate(self.turn_right, 180),block_rect)
+                    elif previous_block.x == -1 and next_block.y == 1:
+                            self.window.blit(self.turn_left,block_rect)
+                    elif previous_block.y == 1 and next_block.x == -1:
+                         self.window.blit(pygame.transform.rotate(self.turn_right, 90),block_rect)
+                    # elif previous_block.x == 1 and next_block.y == -1 or previous_block.y == -1 and next_block.x == 1:
+                    #         self.window.blit(self.body_tr,block_rect)
+                    # elif previous_block.x == 1 and next_block.y == 1 or previous_block.y == 1 and next_block.x == 1:
+                    #         self.window.blit(self.body_br,block_rect)
 
 
                 # pygame.draw.rect(self.window, THAYER_GREEN, block_rect)
