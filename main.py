@@ -75,11 +75,13 @@ class Main():
     def check_fail(self):
         if not 0 <= self.snake.body[0].x < CELL_NUMS or not 0 <= self.snake.body[0].y < CELL_NUMS:
             self.run = False
+            self.snake.death.play()
             self.game_over()
 
         for block in self.snake.body[1:]:
             if block == self.snake.body[0]:
                 self.run = False
+                self.snake.death.play()
                 self.game_over()
 
     def game_over(self):
@@ -132,8 +134,8 @@ def main(): # MAIN FUNCTION
     background_music = pygame.mixer.Sound("music/mr_bightside.mp3")
 
     try:
-        pygame.mixer.music.load("music/mr_bightside.mp3")
-        pygame.mixer_music.set_volume(0.4)
+        pygame.mixer.music.load("music/gametheory.mp3")
+        pygame.mixer_music.set_volume(0.1)
         pygame.mixer.music.play(-1)
     except pygame.error as e:
         print(f"Error loading or playing music in Snake game: {e}")

@@ -30,8 +30,11 @@ class Snake:
         self.turn_left = pygame.transform.scale(self.turn_left, (cfig.CELL_SIZE, cfig.CELL_SIZE))
         self.turn_right = pygame.transform.scale(self.turn_right, (cfig.CELL_SIZE, cfig.CELL_SIZE))
         
+        self.death = pygame.mixer.Sound("snake_Assets/scream/death0.mp3")
+        self.death.set_volume(.2)
 
         self.crunch = pygame.mixer.Sound("snake_assets/crunch/crunch1.mp3")
+
 
     def draw_snake(self):
         self.update_head_graphics()
@@ -66,13 +69,17 @@ class Snake:
                     elif previous_block.y == -1 and next_block.x == -1:
                         self.window.blit(pygame.transform.rotate(self.turn_right, 180),block_rect)
                     elif previous_block.x == -1 and next_block.y == 1:
-                            self.window.blit(self.turn_left,block_rect)
+                            self.window.blit(pygame.transform.rotate(self.turn_right, 270),block_rect)
                     elif previous_block.y == 1 and next_block.x == -1:
-                         self.window.blit(pygame.transform.rotate(self.turn_right, 90),block_rect)
-                    # elif previous_block.x == 1 and next_block.y == -1 or previous_block.y == -1 and next_block.x == 1:
-                    #         self.window.blit(self.body_tr,block_rect)
-                    # elif previous_block.x == 1 and next_block.y == 1 or previous_block.y == 1 and next_block.x == 1:
-                    #         self.window.blit(self.body_br,block_rect)
+                         self.window.blit(self.turn_left,block_rect)
+                    elif previous_block.x == 1 and next_block.y == -1:
+                            self.window.blit(pygame.transform.rotate(self.turn_right, 90),block_rect)
+                    elif previous_block.y == -1 and next_block.x == 1:
+                         self.window.blit(pygame.transform.rotate(self.turn_left, 180),block_rect)
+                    elif previous_block.x == 1 and next_block.y == 1:
+                        self.window.blit(pygame.transform.rotate(self.turn_left, 90),block_rect)
+                    elif previous_block.y == 1 and next_block.x == 1:
+                         self.window.blit(self.turn_right,block_rect)
 
 
                 # pygame.draw.rect(self.window, THAYER_GREEN, block_rect)
@@ -93,6 +100,10 @@ class Snake:
 
     def play_crunch_sound(self):
         self.crunch.play()
+
+        scream = pygame.mixer.Sound(f"apple/scream{r(0,2)}.mp3")
+        scream.set_volume(.8)
+        scream.play()
 
     def reset(self):
         self.body = [Vector2(5,10), Vector2(4,10), Vector2(3,10)]
