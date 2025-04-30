@@ -18,7 +18,7 @@ def init_game():
     pygame.init()
     pygame.font.init()
     pygame.display.set_caption(PYGAME_CAPTION) # Window Caption
-    # pygame.display.set_icon(ICON) #UNCOMMENT WHEN ICON IS DEFINED
+    pygame.display.set_icon(pygame.image.load(ICON)) #UNCOMMENT WHEN ICON IS DEFINED
 
     #Pygame Window
     window = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
