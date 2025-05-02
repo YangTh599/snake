@@ -134,7 +134,7 @@ def main(): # MAIN FUNCTION
     background_music = pygame.mixer.Sound("music/mr_bightside.mp3")
 
     try:
-        pygame.mixer.music.load("music/gametheory.mp3")
+        pygame.mixer.music.load("music/mr_bightside.mp3")
         pygame.mixer_music.set_volume(0.1)
         pygame.mixer.music.play(-1)
     except pygame.error as e:
