@@ -131,12 +131,13 @@ def main(): # MAIN FUNCTION
     start = boxes.Button(window, SCREEN_WIDTH//2 -50,400,100,25,"PLAY")
     quit_button = boxes.Button(window, SCREEN_WIDTH//2 - 50,430,100,25,"QUIT")
 
-    background_music = pygame.mixer.Sound("music/mr_bightside.mp3")
+    background_music = [pygame.mixer.Sound("music/mr_bightside.mp3"),pygame.mixer.Sound("music/superidol.mp3"),pygame.mixer.Sound("music/gametheory.mp3")]
 
     try:
-        pygame.mixer.music.load("music/mr_bightside.mp3")
-        pygame.mixer_music.set_volume(0.1)
-        pygame.mixer.music.play(-1)
+        # pygame.mixer.music.load("music/mr_bightside.mp3")
+        # pygame.mixer_music.set_volume(0.1)
+        # pygame.mixer.music.play(-1)
+        background_music[rnd(0,2)].play(-1)
     except pygame.error as e:
         print(f"Error loading or playing music in Snake game: {e}")
 
